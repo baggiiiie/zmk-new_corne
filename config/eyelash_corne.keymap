@@ -1,106 +1,120 @@
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 1200  // 600
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 25   // 10
-
-#include <input/processors.dtsi>
-#include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/outputs.h>
-#include <dt-bindings/zmk/pointing.h>
-#include <dt-bindings/zmk/rgb.h>
 
-&mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
+#include "includes/key_location.h"
+#include "includes/behaviors_tristate.dtsi"
+#include "includes/behaviors_tapdances.dtsi"
+#include "includes/behaviors_holdtaps.dtsi"
+#include "includes/mouse.dtsi"
+#include "includes/combos.dtsi"
 
-&msc_input_listener { input-processors = <&zip_scroll_scaler 2 1>; };
+#define MEH LS(LC(LALT))
+#define HYPER LG(LS(LC(LALT)))
+#define LARK LG(LS(D))
 
-&msc {
-    acceleration-exponent = <1>;      // 0
-    time-to-max-speed-ms = <100>;       // 300
-    delay-ms = <0>;                   // 0
+#define _BT_SEL_KEYS_           &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &td_bluetooth
+#define _MEDIA_CONTROL_         &kp C_VOLUME_DOWN  &kp C_VOLUME_UP  &kp C_MUTE  &kp C_PLAY_PAUSE
+#define _HOME_ROW_ARROW_        &ht LA(LEFT) LEFT  &kp DOWN  &kp UP  &ht LA(RIGHT) RIGHT
+#define _BRIGHTNESS_CONTROL_    &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  
+#define _SCREENSHOT_SHORTCUT_   &kp LS(LG(N2))    &kp LS(LG(N3))  &kp LS(LG(N4))
+
+
+&sk {
+    release-after-ms = <2000>;
+    quick-release;
+    /delete-property/ ignore-modifiers;
 };
+&sl {
+    release-after-ms = <1000>;
+    
+    // quick-release enabled: sticky key is released when the next key is pressed
+    // disabled: sticky key is released when the next key is released
+    // in order to long press mouse keys, quick release should be disabled
+    // quick-release;
 
-&mmv {
-    time-to-max-speed-ms = <500>;
-    acceleration-exponent = <1>;
-    trigger-period-ms = <16>;
+    /delete-property/ ignore-modifiers;
+};
+&lt {
+    tapping-term-ms = <220>;
+    // quick tap lt twice to send backspace
+    quick-tap-ms = <220>;
+    flavor = "hold-preferred";
 };
 
 / {
-    behaviors {
-        td0: td0 {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "Shift/Caps Lock Tap Dance";
-            #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
-        };
-    };
-
-    rgb_encoder: rgb_encoder {
-        compatible = "zmk,behavior-sensor-rotate";
-        #sensor-binding-cells = <0>;
-        bindings = <&rgb_ug RGB_BRI>, <&rgb_ug RGB_BRD>;
-    };
-
-    scroll_encoder: scroll_encoder {
-        compatible = "zmk,behavior-sensor-rotate";
-        #sensor-binding-cells = <0>;
-        bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
-
-        tap-ms = <100>;
-    };
 
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "QWERTY";
             bindings = <
-&kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T                               &kp UP                &kp Y        &kp U  &kp I      &kp O    &kp P     &kp BSPC
-&td0       &kp A  &kp S  &kp D     &kp F  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp H        &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&kp LCTRL  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp SPACE              &kp DOWN              &kp N        &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LGUI  &mo 1  &lt 3 SPACE                                               &lt 3 ENTER  &mo 2  &kp RALT
+// ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+     &ht LG(X) LG(C)    &kp Q    &kp W         &kp F         &kp P         &kp B               &none          &kp J         &kp L         &kp U         &kp Y         &td_quotes    &lt 4 LG(SPACE)
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &ht LSHFT LG(V)    &hm LSHFT A  &hm LALT R  &hm LCTRL S  &hm LGUI T   &kp G         &none &none &none    &layer_ht 4 M  &hm RGUI N    &hm RCTRL E   &hm RALT I    &hm RSHFT O   &kp ENTER
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &layer_ht 3 LARK   &kp Z    &kp X         &kp C         &kp D         &kp V           &none   &none      &kp K         &kp H         &kp COMMA     &kp DOT       &kp FSLH      &kp RC(SPACE)
+// ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                              &hyper HYPER 0  &lt 1 DEL    &meh MEH SPACE                     &td_caps     &lt 2 BSPC    &mo_tog 4 4
+//                                           ╰─────────────┴─────────────┴─────────────╯                    ╰─────────────┴─────────────┴─────────────╯
             >;
-
-            // sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
-
-            sensor-bindings = <&inc_dec_kp N2 N1>;
         };
 
         lower_layer {
-            display-name = "NUMBER";
             bindings = <
-&trans  &kp N1           &kp N2          &kp N3        &kp N4        &kp N5                                         &mmv MOVE_UP                     &kp N6           &kp N7           &kp N8           &kp N9           &kp N0    &kp BSPC
-&trans  &bt BT_CLR_ALL   &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3                   &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &kp LEFT         &kp DOWN         &kp UP           &kp RIGHT        &kp HOME  &kp PG_UP
-&trans  &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &trans        &trans        &rgb_ug RGB_EFF  &kp C_MUTE                    &mmv MOVE_DOWN                   &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp END   &kp PG_DN
-                                         &trans        &trans        &trans                                                                          &kp INS          &kp DEL          &trans
+// ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+     &none         &kp GRAVE     &kp TILDE      &kp PIPE     &kp PLUS      &none               &none          &kp PLUS      &kp N7        &kp N8        &kp N9        &kp STAR      &none 
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &kp LC(LEFT)  &kp LC(RIGHT)  &kp UNDER    &kp MINUS     &none         &none &none &none    &kp MINUS     &kp N4        &kp N5        &kp N6        &kp N0        &none 
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &kp LG(GRAVE)  &kp LS(TAB)   &ctrl_tab    &cmd_tab      &none           &none   &none      &kp EQUAL     &kp N1        &kp N2        &kp N3        &kp FSLH      &none 
+// ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                               &trans        &trans        &trans                             &trans        &kp LA(BSPC)  &kp DOT
+//                                           ╰─────────────┴─────────────┴─────────────╯                    ╰─────────────┴─────────────┴─────────────╯
             >;
-
-            sensor-bindings = <&scroll_encoder>;
         };
 
         raise_layer {
-            display-name = "SYMBOL";
             bindings = <
-&trans  &kp EXCL      &kp AT        &kp HASH   &kp DLLR   &kp PRCNT                            &mmv MOVE_UP                     &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
-&trans  &bt BT_CLR    &mkp LCLK     &mkp MCLK  &mkp RCLK  &mkp MB4             &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
-&trans  &out OUT_USB  &out OUT_BLE  &none      &none      &mkp MB5   &trans                    &mmv MOVE_DOWN                   &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
-                                    &trans     &trans     &kp SPACE                                                             &kp RET    &trans     &trans
+// ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+     &none         &kp DLLR      &kp HASH      &kp LBRC      &kp RBRC      &none               &none          &none         &kp AMPS      &kp STAR      &kp SEMI      &kp DQT       &none 
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &kp AT        &kp EXCL      &kp LPAR      &kp RPAR      &none         &none &none &none                      _HOME_ROW_ARROW_                      &kp COLON     &none 
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &kp CARET     &kp PRCNT     &kp LBKT      &kp RBKT      &none           &none   &none      &kp END      &kp PAGE_DOWN   &kp PAGE_UP  &kp HOME      &kp BSLH      &none 
+// ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                               &trans        &kp RA(DEL)   &trans                             &trans        &trans        &trans 
+//                                           ╰─────────────┴─────────────┴─────────────╯                    ╰─────────────┴─────────────┴─────────────╯
             >;
-
-            sensor-bindings = <&scroll_encoder>;
         };
 
-        layer_3 {
-            display-name = "Fn";
+        controls {
             bindings = <
-&studio_unlock  &kp F1      &kp F2     &kp F3       &kp F4     &kp F5                                  &mmv MOVE_UP                     &kp F6       &kp F7     &kp F8       &kp F9      &kp F10          &kp F11
-&trans          &trans      &mkp LCLK  &mkp MCLK    &mkp RCLK  &mkp MB4                &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &bootloader  &mkp LCLK  &mkp MCLK    &mkp RCLK   &kp PRINTSCREEN  &kp F12
-&trans          &sys_reset  &trans     &bootloader  &trans     &mkp MB5  &kp C_MUTE                    &mmv MOVE_DOWN                   &trans       &trans     &bootloader  &sys_reset  &kp SCROLLLOCK   &kp PAUSE_BREAK
-                                       &trans       &trans     &trans                                                                   &trans       &trans     &trans
+// ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+     &none         &none         &none         &none         &none         &bootloader         &none                           _BT_SEL_KEYS_
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &none           _BRIGHTNESS_CONTROL_     &kp LG(MINUS)  &kp LG(EQUAL) &none &none &none    &kp F7        &kp F8        &kp F9        &kp F10       &kp F11       &kp F12
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &kp LS(LG(N1))                  _MEDIA_CONTROL_                         &none   &none      &kp F1        &kp F2        &kp F3        &kp F4        &kp F5        &kp F6
+// ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                        _SCREENSHOT_SHORTCUT_                                 &trans        &trans        &bootloader 
+//                                           ╰─────────────┴─────────────┴─────────────╯                    ╰─────────────┴─────────────┴─────────────╯
             >;
+        };
 
-            sensor-bindings = <&scroll_encoder>;
+        mouse {
+            bindings = <
+// ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+     &none         &none         MOUSE_WH_D    MOUSE_MS_U    MOUSE_WH_U    &none               &none          &none         &none         &none         &none         &none         &none
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         MOUSE_WH_R    MOUSE_MS_L    MOUSE_MS_D    MOUSE_MS_R    MOUSE_WH_L    &none &none &none    &none         &kp RGUI      &none         &none         &none         &none
+// ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+     &none         &none         &none          ZOOM_OUT      ZOOM_IN      &none           &none   &none      &none       &none         &none         &none         &none         &none
+// ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                               &none         MOUSE_RCLK    MOUSE_LCLK                         &trans        &trans        &trans 
+//                                           ╰─────────────┴─────────────┴─────────────╯                    ╰─────────────┴─────────────┴─────────────╯
+            >;
         };
     };
 };
