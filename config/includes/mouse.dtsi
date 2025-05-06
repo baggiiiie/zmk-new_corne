@@ -1,4 +1,4 @@
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 3500  // default: 600
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 2000  // default: 600
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
 
 #include <dt-bindings/zmk/mouse.h>
@@ -7,12 +7,14 @@
 
 &mmv {
   acceleration-exponent = <1>;
-  time-to-max-speed-ms = <50>;
+  time-to-max-speed-ms = <800>;
   delay-ms = <0>;
 };
 
 &msc {
   acceleration-exponent = <1>;
+  time-to-max-speed-ms = <1>;
+  trigger-period-ms = <5>;
   delay-ms = <0>;
 };
 
