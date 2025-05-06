@@ -1,3 +1,6 @@
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 1500  // default: 600
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
+
 #include <dt-bindings/zmk/mouse.h>
 #include <dt-bindings/zmk/pointing.h>
 
@@ -15,17 +18,12 @@
   delay-ms = <1>;
 };
 
-#undef ZMK_POINTING_DEFAULT_MOVE_VAL
-#undef ZMK_POINTING_DEFAULT_SCRL_VAL
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 1500  // default: 600
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
-
 #define MOUSE_LCLK &mkp LCLK
 #define MOUSE_RCLK &mkp RCLK
 #define MOUSE_MS_U &mmv MOVE_UP
 #define MOUSE_MS_D &mmv MOVE_DOWN
 #define MOUSE_MS_L &mmv MOVE_LEFT
-#define MOUSE_MS_R &mmv MOVE_RIGH
+#define MOUSE_MS_R &mmv MOVE_RIGHT
 #define MOUSE_WH_U &msc SCRL_UP
 #define MOUSE_WH_D &msc SCRL_DOWN
 #define MOUSE_WH_L &msc SCRL_LEFT
