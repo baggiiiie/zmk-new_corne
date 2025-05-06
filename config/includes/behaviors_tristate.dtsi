@@ -6,14 +6,14 @@
             compatible = "zmk,behavior-tri-state";
             #binding-cells = <0>;
             bindings = <&kt LGUI>, <&kp TAB>, <&kt LGUI>;
-            ignored-key-positions = <LB3>;
+            ignored-key-positions = <30>;
         };
 
         ctrl_tab: swapper_ctrl {
             compatible = "zmk,behavior-tri-state";
             #binding-cells = <0>;
             bindings = <&kt LCTRL>, <&kp TAB>, <&kt LCTRL>;
-            ignored-key-positions = <LB3>;
+            ignored-key-positions = <30>;
         };
     };
 
