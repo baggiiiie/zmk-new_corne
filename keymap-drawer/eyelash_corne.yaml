@@ -12,7 +12,7 @@ layers:
   - L
   - U
   - Y
-  - '&td_quotes'
+  - {t: '''', s: '"'}
   - {t: 'Gui+$$mdi:keyboard-space$$', h: MOUSE}
   - {t: V, h: '$$mdi:apple-keyboard-shift$$'}
   - {t: '6', h: '$$mdi:apple-keyboard-shift$$'}
