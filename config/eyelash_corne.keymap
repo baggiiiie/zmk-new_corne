@@ -50,9 +50,9 @@
             display-name = "BAGGIE";
             bindings = <
 // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮                    ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-     &ht LG(X) LG(C)    &kp Q    &kp W         &kp F         &kp P         &kp B               &none          &kp J         &kp L         &kp U         &kp Y         &td_quotes    &lt 4 LG(SPACE)
+     &ht LG(X) LG(C)    &kp Q    &kp W         &kp F         &kp P         &kp B               &none          &kp J         &kp L         &kp U         &kp Y         &kp SQT       &lt 4 LG(SPACE)
 // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-     &ht LSHFT LG(V)    &hm LSHFT A  &hm LALT R  &hm LCTRL S  &hm LGUI T   &kp G         &none &none &none    &layer_ht 4 M  &hm RGUI N    &hm RCTRL E   &hm RALT I    &hm RSHFT O   &kp ENTER
+     &ht LSHFT LG(V)    &hm LSHFT A  &hm LALT R  &hm LCTRL S  &hm LGUI T   &kp G         &none &none &none    &layer_ht 4 M  &hm RGUI N   &hm RCTRL E   &hm RALT I    &hm RSHFT O   &kp ENTER
 // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
      &layer_ht 3 LARK   &kp Z    &kp X         &kp C         &kp D         &kp V           &none   &none      &kp K         &kp H         &kp COMMA     &kp DOT       &kp FSLH      &kp RC(SPACE)
 // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤                    ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
